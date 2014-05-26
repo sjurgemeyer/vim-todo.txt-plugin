@@ -5,13 +5,13 @@ function! SortByDate()
 endfunction
 
 function! SortByContext()
-    :let sortString = '\@[^\s]+'
+    :let sortString = '\@[^ $]+'
     :let matchString = '@[^ $]\+'
     :call TodoSort(sortString, matchString)
 endfunction
 
 function! SortByProject()
-    :let sortString = '\+[^\s]+'
+    :let sortString = '\+[^ $]+'
     :let matchString ='+[^ $]\+'
     :call TodoSort(sortString, matchString)
 endfunction
@@ -23,6 +23,8 @@ function! TodoSort(sortString, matchString)
 
     :let start = search(a:matchString)
     :let end = search(a:matchString, 'b')
+    :echom start
+    :echom end
     :let lines = getline(start, end)
     :execute "normal " . start . "G"
     :execute 'normal "_d' . (end-start) . "j"
