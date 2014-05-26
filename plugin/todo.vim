@@ -23,8 +23,6 @@ function! TodoSort(sortString, matchString)
 
     :let start = search(a:matchString)
     :let end = search(a:matchString, 'b')
-    :echom start
-    :echom end
     :let lines = getline(start, end)
     :execute "normal " . start . "G"
     :execute 'normal "_d' . (end-start) . "j"
@@ -47,7 +45,20 @@ function! TodoSort(sortString, matchString)
         endif
     endfor
     :execute "normal I\<CR>"
+endfunction
 
+function! TodoInsertRelativeDate(days) 
+    :let value = strftime("%Y-%m-%d", localtime() + (a:days * 24 * 60 * 60))
+    :call TodoInsertDate(value)
+endfunction
+
+function! TodoInsertDate(value)
+    :call TodoInsert('t', a:value)
+endfunction
+
+function! TodoInsert(key, value)
+    :silent execute ":s/\\v " . a:key . ":[^ $]+//ge"
+    :execute "normal A " . a:key . ':' . a:value
 endfunction
 
 command! SortByDate :call SortByDate() 
